@@ -2,7 +2,7 @@ const cron = require("node-cron");
 const Payment = require("../models/paymentModel");
 const { triggerLambda } = require("../services/lambdaService");
 
-cron.schedule("0 0 1 * *", async () => {
+cron.schedule("*/1 * * * *", async () => {
 
     console.log("Running batch job");
 
@@ -10,10 +10,12 @@ cron.schedule("0 0 1 * *", async () => {
 
     for (let pay of payments) {
 
+        const instanceId = process.env.INSTANCE_ID; // ⭐ stable
+
         if (pay.status === "SUCCESS") {
-            await triggerLambda("start", pay.instanceId);
+            await triggerLambda("start", instanceId);
         } else {
-            await triggerLambda("stop", pay.instanceId);
+            await triggerLambda("stop", instanceId);
         }
 
         pay.processed = true;
