@@ -2,7 +2,7 @@ const cron = require("node-cron");
 const Payment = require("../models/paymentModel");
 const { triggerLambda } = require("../services/lambdaService");
 
-cron.schedule("*/1 * * * *", async () => {
+cron.schedule("* * 1 * *", async () => {
 
     console.log("Running batch job");
 
